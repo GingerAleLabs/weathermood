@@ -1,0 +1,14 @@
+WeatherMood
+-- an app that lets you track / investigate the correlation between the weather and your mood
+
+
+
+Backend (Python)
+Provides a simple CLI (future extension > REST API)
+
+Live weather data for a specific location (lat/lon or predefined city) is fetched through OpenMeteo API
+The weather is rated usng a custom weather scale
+The user can log their mood, and optionally add a note
+Data is stored locally (SQLite)
+
+Some simple stats/correlations are computed between the weather and the mood
