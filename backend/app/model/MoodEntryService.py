@@ -1,4 +1,4 @@
-from db import get_connection
+from model.db import get_connection
 from datetime import datetime
 
 class MoodEntryService:
@@ -10,7 +10,7 @@ class MoodEntryService:
         timestamp = datetime.now().isoformat()
         cur.execute(
             """
-            INSERT INTO mood_entries (user_id, timestamp, mood, note, temperature, weather_rating)
+            INSERT INTO mood_entry (user_id, timestamp, mood, note, temperature, weather_rating)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
             (user_id, timestamp, mood, note, temperature, weather_rating)
@@ -22,7 +22,7 @@ class MoodEntryService:
     def get_entries():
         conn = get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM mood_entries ORDER BY timestamp DESC")
+        cur.execute("SELECT * FROM mood_entry ORDER BY timestamp DESC")
         rows = cur.fetchall()
         conn.close()
         return [dict(row) for row in rows]
