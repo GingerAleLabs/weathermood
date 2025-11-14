@@ -1,5 +1,6 @@
 import typer
 from model.MoodEntryService import MoodEntryService
+from model.entities.MoodEntry import MoodEntry
 from model.db import init_db
 from domain.city_coords import CITY_COORDS
 
@@ -69,13 +70,13 @@ def log(
             raise typer.BadParameter(f"The longitude must be between -180 and 180")
 
     #Here I'm sure that I have latitude/longitude and they are both valid
-    typer.echo(f"Lat: {latitude}, lng: '{longitude}'")
 
     #TODO meteo api
     temperature = 20
     weather_rating = 3
 
-    MoodEntryService.add_entry(mood, note, temperature, weather_rating)
+    new_entry = MoodEntry(mood=mood, note=note, temperature=temperature, weather_rating=weather_rating)
+    MoodEntryService.add_entry(new_entry)
     typer.echo(f"Logged mood {mood} with note: '{note}'")
 
 

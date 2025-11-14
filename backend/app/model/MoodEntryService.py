@@ -1,10 +1,10 @@
 from model.db import get_connection
 from datetime import datetime
+from model.entities.MoodEntry import MoodEntry
 
 class MoodEntryService:
     @staticmethod
-    def add_entry(
-        mood: int, note: str | None, temperature: float, weather_rating: int, user_id: int | None = None):
+    def add_entry(entry: MoodEntry):
         conn = get_connection()
         cur = conn.cursor()
         timestamp = datetime.now().isoformat()
@@ -13,7 +13,7 @@ class MoodEntryService:
             INSERT INTO mood_entry (user_id, timestamp, mood, note, temperature, weather_rating)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (user_id, timestamp, mood, note, temperature, weather_rating)
+            (entry.user_id, timestamp, entry.mood, entry.note, entry.temperature, entry.weather_rating)
         )
         conn.commit()
         conn.close()
@@ -25,4 +25,4 @@ class MoodEntryService:
         cur.execute("SELECT * FROM mood_entry ORDER BY timestamp DESC")
         rows = cur.fetchall()
         conn.close()
-        return [dict(row) for row in rows]
+        return [MoodEntry(id=row['id'], user_id=row['user_id'], timestamp=row['timestamp'], mood=row['mood'], note=row['note'], temperature=row['temperature'], weather_rating=row['weather_rating']) for row in rows]
