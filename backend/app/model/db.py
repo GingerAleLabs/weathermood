@@ -1,16 +1,31 @@
-import sqlite3
 from pathlib import Path
+import sqlite3
 
 DB_PATH = Path(__file__).parent / "weathermood.db"
+SCHEMA_PATH = Path(__file__).parent / "schema.sql"
+
+_initialized = False
+
 
 def get_connection():
+    global _initialized
+    if not _initialized:
+        init_db()
+        _initialized = True
+    
     conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row  # allows dict-like access
+    conn.row_factory = sqlite3.Row
     return conn
 
+
 def init_db():
-    conn = get_connection()
-    with open(Path(__file__).parent / "schema.sql") as f:
-        conn.executescript(f.read())
-    conn.commit()
-    conn.close()
+    global _initialized
+    if _initialized:
+        return
+
+    if not DB_PATH.exists():
+        with sqlite3.connect(DB_PATH) as conn:
+            with open(SCHEMA_PATH) as f:
+                conn.executescript(f.read())
+
+    _initialized = True

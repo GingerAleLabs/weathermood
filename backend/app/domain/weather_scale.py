@@ -1,23 +1,13 @@
+# Internal weather scale
 WEATHER_SCALE = {
-    0: "Stormy or hailing",
-    1: "Raining or snowing",
-    2: "Cloudy",
-    3: "Partly cloudy",
-    4: "Mostly sunny",
-    5: "Sunny"
+    -1: "Unknown",
+     0: "Stormy or hailing",
+     1: "Raining or snowing",
+     2: "Cloudy",
+     3: "Partly cloudy",
+     4: "Mostly sunny",
+     5: "Sunny"
 }
-
-def get_weather_code(description: str) -> int:
-    for code, desc in WEATHER_SCALE.items():
-        if description.lower() in desc.lower():
-            return code
-    return 3  # default to neutral if no match TODO
-
-def get_weather_description(rating:int) -> str:
-    if(rating in WEATHER_SCALE):
-        return WEATHER_SCALE[rating]
-    else:
-        return ""
 
 #conversion from Open-Meteo weather codes to WEATHER_SCALE
 #
@@ -48,3 +38,16 @@ rated5 = [0]
 rated = [rated0, rated1, rated2, rated3, rated4, rated5]
 
 WEATHER_CODE_TO_RATING =  {x: idx for idx, r in enumerate(rated) for x in r}
+
+# from the internal weather scale, returns a weather description
+def get_weather_description(rating:int) -> str:
+    if (rating in WEATHER_SCALE):
+        return WEATHER_SCALE[rating]
+    else:
+        return ""
+    
+#converts the OpenMeteo weather rating to the internal weather scale
+def convert_openmeteo_rating(openmeteorating:int) -> int:
+    if (openmeteorating in WEATHER_CODE_TO_RATING.keys()):
+        return WEATHER_CODE_TO_RATING[openmeteorating]
+    return -1

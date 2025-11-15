@@ -1,0 +1,4 @@
+CLI supported commands
+
+│ list-entries   List all the entries                                                                                                      │
+│ log            Log an entry providing the mood rating(1-5), an optional note, and a city or coordinates  
