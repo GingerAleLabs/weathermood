@@ -2,3 +2,6 @@
 __pycache__/
 *.py[cod]
 *.pyo
+
+#db
+backend/app/model/weathermood.db
