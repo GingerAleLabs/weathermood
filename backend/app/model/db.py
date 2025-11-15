@@ -29,3 +29,12 @@ def init_db():
                 conn.executescript(f.read())
 
     _initialized = True
+
+def insert_mock_data():
+    conn = get_connection()
+
+    mock_path = Path(__file__).parent / "mockdata.sql"
+
+    with sqlite3.connect(DB_PATH) as conn:
+            with open(mock_path) as f:
+                conn.executescript(f.read())
