@@ -2,6 +2,7 @@ import typer
 
 from cli.list_entries import aux_list_entries
 from cli.log import aux_log
+from cli.weekly_stats import aux_weekly_stats
 
 """
 This is the main hub for user commands
@@ -20,7 +21,6 @@ def list_entries():
     aux_list_entries()
 
 
-# Log a new entry
 @app.command()
 def log(
         mood: int = typer.Option(..., "-mood", help="Your mood rating from 1 to 5", min=1, max=5),
@@ -35,6 +35,12 @@ def log(
 
     aux_log(mood, note, city, lat, lng)
     
+@app.command()
+def weekly_stats():
+    '''
+    Retrieves average mood, average weather rating and average temperature on a weekly basis
+    '''
+    aux_weekly_stats()
 
 
 #Start the cli

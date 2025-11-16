@@ -3,6 +3,10 @@ from datetime import datetime
 from backend.app.domain.weather_scale import get_weather_description
 
 class MoodEntryService:
+
+
+    #Add an entry
+
     @staticmethod
     def add_entry(user_id:int | None, mood, note, temperature, weather_rating):
         conn = get_connection()
@@ -17,6 +21,9 @@ class MoodEntryService:
         )
         conn.commit()
         conn.close()
+
+
+    #Retrieve all entries
 
     @staticmethod
     def get_entries():
@@ -33,7 +40,14 @@ class MoodEntryService:
         conn.close()
 
         entries = [
-            {'timestamp':row['timestamp'], 'mood':row['mood'], 'note':row['note'], 'temperature':row['temperature'], 'weather_rating':row['weather_rating'], 'weather_description':get_weather_description(row['weather_rating'])} 
+            {
+                'timestamp':row['timestamp'], 
+                'mood':row['mood'], 
+                'note':row['note'], 
+                'temperature':row['temperature'], 
+                'weather_rating':row['weather_rating'], 
+                'weather_description':get_weather_description(row['weather_rating']),
+            } 
             for row in rows
         ]
 
