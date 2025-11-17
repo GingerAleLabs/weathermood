@@ -13,16 +13,23 @@ def populate_db_for_stats_testing(conn):
     w3 = date.fromisoformat("2023-09-13") # year 2023, week 37
 
 
+    # Expected stats per weather rating
+    # 1: "Stormy or hailing" => avg_mood 3, num_entries 1
+    # 2: "Raining or snowing" => avg_mood 4, num_entries 2
+    # 3: "Cloudy" => avg_mood 4, num_entries 1
+    # 4: "Partly cloudy" => avg_mood 5, num_entries 2
+    # 5: "Sunny" => avg_mood 0, num_entries 0
+
     rows = [
         #week 1: avg mood 4, avg temp 16.6, avg weather rating 2.67, num entries 3
         (None, w1.isoformat(),                          3, "Just okay",         16.1,   1),
         (None, (w1 + timedelta(days=1)).isoformat(),    4, "Not too bad",       17.2,   3),
         (None, (w1 + timedelta(days=2)).isoformat(),    5, "Feelin' great :)",  16.5,   4),
         #week 2: avg mood 5, avg temp 21.4, avg weather rating 3.0, num entries 2
-        (None, w2.isoformat(), 5, "Life's good", 22.3, 2),
-        (None, (w2 + timedelta(days=1)).isoformat(), 5, "On a good roll", 20.5, 4),
+        (None, w2.isoformat(),                          5, "Life's good",       22.3,   2),
+        (None, (w2 + timedelta(days=1)).isoformat(),    5, "On a good roll",    20.5,   4),
         #week 3: avg mood 3, avg temp 24.3, avg weather rating 2.0, num entries 1
-        (None, w3.isoformat(), 3, "Feeling tired", 24.3, 2),
+        (None, w3.isoformat(),                          3, "Feeling tired",     24.3,   2),
     ]
 
     cur.executemany(
@@ -80,3 +87,49 @@ def test_weekly_stats(tmp_path):
     assert abs(stats3["avg_temperature"] - 24.3) < 0.01
     assert abs(stats3["avg_weather_rating"] - 2) < 0.01
     assert stats3["num_entries"] == 1
+
+
+def test_mood_per_weather_ranking(tmp_path):
+    # Using a dedicated test db
+    test_db = tmp_path / "test.db"
+    configure_db(str(test_db)) 
+
+    # Insert test entries
+    conn = get_connection()
+    populate_db_for_stats_testing(conn)
+    conn.close()
+
+    stats = StatsService.get_mood_per_weather_ranking()
+
+    # Assertions
+    assert len(stats) == 5
+
+    # 1: "Stormy or hailing" => avg_mood 3, num_entries 1
+    stats1 = stats[1]
+    assert stats1['weather_description'] == "Stormy or hailing"
+    assert stats1['avg_mood'] == 3
+    assert stats1['num_entries'] == 1
+    
+    # 2: "Raining or snowing" => avg_mood 4, num_entries 2
+    stats2 = stats[2]
+    assert stats2['weather_description'] == "Raining or snowing"
+    assert stats2['avg_mood'] == 4
+    assert stats2['num_entries'] == 2
+
+    # 3: "Cloudy" => avg_mood 4, num_entries 1
+    stats3 = stats[3]
+    assert stats3['weather_description'] == "Cloudy"
+    assert stats3['avg_mood'] == 4
+    assert stats3['num_entries'] == 1
+    
+    # 4: "Partly cloudy" => avg_mood 5, num_entries 2
+    stats4 = stats[4]
+    assert stats4['weather_description'] == "Partly cloudy"
+    assert stats4['avg_mood'] == 5
+    assert stats4['num_entries'] == 2
+    
+    # 5: "Sunny" => avg_mood 0, num_entries 0
+    stats5 = stats[5]
+    assert stats5['weather_description'] == "Sunny"
+    assert stats5['avg_mood'] == 0
+    assert stats5['num_entries'] == 0
