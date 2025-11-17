@@ -1,11 +1,10 @@
 # Internal weather scale
 WEATHER_SCALE = {
     -1: "Unknown",
-     0: "Stormy or hailing",
-     1: "Raining or snowing",
-     2: "Cloudy",
-     3: "Partly cloudy",
-     4: "Mostly sunny",
+     1: "Stormy or hailing",
+     2: "Raining or snowing",
+     3: "Cloudy",
+     4: "Partly cloudy",
      5: "Sunny"
 }
 
@@ -28,14 +27,13 @@ WEATHER_SCALE = {
 # 95    | Thunderstorm                         | 0
 # 96–99 | Thunderstorm with hail               | 0
 
-rated0 = [64, 65, 67, 74, 75, 82, 86, 95, 96, 97, 98, 99]
-rated1 = [51, 52, 53, 54, 55, 56, 57, 61, 62, 63, 66, 71, 72, 73, 80, 81, 85]
-rated2 = [3, 45, 46, 47, 48]
-rated3 = [2]
-rated4 = [1]
-rated5 = [0]
+rated1 = [64, 65, 67, 74, 75, 82, 86, 95, 96, 97, 98, 99]
+rated2 = [51, 52, 53, 54, 55, 56, 57, 61, 62, 63, 66, 71, 72, 73, 80, 81, 85]
+rated3 = [3, 45, 46, 47, 48]
+rated4 = [2]
+rated5 = [0,1]
 
-rated = [rated0, rated1, rated2, rated3, rated4, rated5]
+rated = [rated1, rated2, rated3, rated4, rated5]
 
 WEATHER_CODE_TO_RATING =  {x: idx for idx, r in enumerate(rated) for x in r}
 

@@ -11,11 +11,11 @@ def aux_weekly_stats():
 
     for s in stats:
         year = int(s['year'])
-        week = int(s['week_number']) + 1
+        week = int(s['week_number'])
 
         monday = date.fromisocalendar(year, week, 1).strftime("%d.%m.%Y")
         sunday = date.fromisocalendar(year, week, 7).strftime("%d.%m.%Y")
         typer.echo(f"Year {year}, {monday} - {sunday}: {s['num_entries']} entries")
         typer.echo(f"Average mood: {get_printable_rating(round(s['avg_mood']))}")
-        typer.echo(f"Average weather: {s['avg_weather_description']}, {round(s['avg_temperature'],1)}°C")
+        typer.echo(f"Average weather rating: {round(s['avg_weather_rating'],1)}/5, {round(s['avg_temperature'],1)}°C")
         typer.echo('------------------------------------------------')

@@ -1,5 +1,6 @@
 from backend.model.db import get_connection
 from backend.domain.weather_scale import get_weather_description, WEATHER_SCALE
+from datetime import datetime
     
 class StatsService:
 
@@ -11,7 +12,7 @@ class StatsService:
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT strftime('%Y', timestamp) AS year, strftime('%W', timestamp) AS week_number, AVG(mood) AS avg_mood, AVG(temperature) AS avg_temperature, AVG(weather_rating) AS avg_weather_rating, COUNT(*) as num_entries 
+            SELECT timestamp, AVG(mood) AS avg_mood, AVG(temperature) AS avg_temperature, AVG(weather_rating) AS avg_weather_rating, COUNT(*) as num_entries 
             FROM mood_entry 
             GROUP BY strftime('%Y', timestamp), strftime('%W', timestamp)
             ORDER BY timestamp DESC
@@ -22,12 +23,11 @@ class StatsService:
 
         stats = [
             {
-                'year': row['year'], 
-                'week_number': row['week_number'], 
+                'year': datetime.fromisoformat(row['timestamp']).isocalendar().year,
+                'week_number': datetime.fromisoformat(row['timestamp']).isocalendar().week,
                 'avg_mood': row['avg_mood'], 
                 'avg_temperature': row['avg_temperature'], 
                 'avg_weather_rating': row['avg_weather_rating'],
-                'avg_weather_description': get_weather_description(round(row['avg_weather_rating'])),
                 'num_entries': row['num_entries']
             }
             for row in rows

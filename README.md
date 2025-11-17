@@ -19,9 +19,9 @@ Loading mock db (erases all data):
     python .\backend\mock.py 
 
 Running tests:
-    pytest
+    pytest -v
 
 CLI commands:
     python -m cli <command>
     python -m cli --help => shows supported commands
-    python -m cli <command> --help => shows command info and params
+    python -m cli <command> --help => shows command info and params 
