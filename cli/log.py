@@ -1,8 +1,8 @@
 import typer
 
-from backend.app.services.MoodEntryService import MoodEntryService
-from backend.app.services.CityCoordsService import CityCoordsService
-from backend.app.services.WeatherService import WeatherService
+from backend.services.MoodEntryService import MoodEntryService
+from backend.services.CityCoordsService import CityCoordsService
+from backend.services.WeatherService import WeatherService
 
 def aux_log(mood, note, city, lat, lng):
     '''

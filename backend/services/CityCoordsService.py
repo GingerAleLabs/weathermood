@@ -1,4 +1,4 @@
-from backend.app.domain.city_coords import CITY_COORDS
+from backend.domain.city_coords import CITY_COORDS
 
 class CityCoordsService:
 

@@ -1,6 +1,6 @@
 import typer
 
-from backend.app.services.StatsService import StatsService
+from backend.services.StatsService import StatsService
 
 from cli.utils import get_printable_rating
 

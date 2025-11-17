@@ -1,5 +1,5 @@
-from backend.app.model.db import get_connection
-from backend.app.domain.weather_scale import get_weather_description, WEATHER_SCALE
+from backend.model.db import get_connection
+from backend.domain.weather_scale import get_weather_description, WEATHER_SCALE
     
 class StatsService:
 

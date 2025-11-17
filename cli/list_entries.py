@@ -1,4 +1,4 @@
-from backend.app.services.MoodEntryService import MoodEntryService
+from backend.services.MoodEntryService import MoodEntryService
 from cli.utils import print_entry
 
 import typer

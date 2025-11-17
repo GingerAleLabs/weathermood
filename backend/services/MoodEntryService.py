@@ -1,6 +1,6 @@
-from backend.app.model.db import get_connection
+from backend.model.db import get_connection
 from datetime import datetime
-from backend.app.domain.weather_scale import get_weather_description
+from backend.domain.weather_scale import get_weather_description
 
 class MoodEntryService:
 

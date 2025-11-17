@@ -4,4 +4,4 @@ __pycache__/
 *.pyo
 
 #db
-backend/app/model/weathermood.db
+backend/model/weathermood.db

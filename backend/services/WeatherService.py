@@ -1,5 +1,5 @@
 import requests
-from backend.app.domain.weather_scale import get_weather_description, convert_openmeteo_rating
+from backend.domain.weather_scale import get_weather_description, convert_openmeteo_rating
 
 class WeatherService:
 

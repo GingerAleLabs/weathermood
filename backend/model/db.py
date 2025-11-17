@@ -1,13 +1,26 @@
 from pathlib import Path
 import sqlite3
 
-DB_PATH = Path(__file__).parent / "weathermood.db"
+DEFAULT_DB_PATH = Path(__file__).parent / "weathermood.db"
 SCHEMA_PATH = Path(__file__).parent / "schema.sql"
+
+DB_PATH = None
 
 _initialized = False
 
+# if called before get_connection(), allows to change the path of the DB
+# Useful to run tests with a separate db file 
+def configure_db(path):
+    global DB_PATH
+    DB_PATH = path
+
 
 def get_connection():
+
+    global DB_PATH
+    if DB_PATH is None:
+        DB_PATH = DEFAULT_DB_PATH
+
     global _initialized
     if not _initialized:
         init_db()
@@ -22,9 +35,11 @@ def init_db():
     global _initialized
     if _initialized:
         return
-
-    if not DB_PATH.exists():
-        with sqlite3.connect(DB_PATH) as conn:
+    
+    global DB_PATH
+    db_file = Path(DB_PATH)
+    if not db_file.exists():
+        with sqlite3.connect(db_file) as conn:
             with open(SCHEMA_PATH) as f:
                 conn.executescript(f.read())
 

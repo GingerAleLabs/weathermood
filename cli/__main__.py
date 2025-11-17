@@ -48,7 +48,7 @@ def weekly_stats():
 @app.command()
 def mood_by_weather():
     '''
-    Retrieves average mood, average weather rating and average temperature on a weekly basis
+    Retrieves average mood for each weather rating
     '''
     aux_mood_by_weather()
 
