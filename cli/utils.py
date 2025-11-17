@@ -13,4 +13,4 @@ def print_entry(entry):
 
 def get_printable_rating(rating):
     stars=['*----', '**---', '***--', '****-', '*****']
-    return stars[rating]
+    return stars[rating-1]

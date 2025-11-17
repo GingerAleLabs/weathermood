@@ -3,6 +3,7 @@ import typer
 from cli.list_entries import aux_list_entries
 from cli.log import aux_log
 from cli.weekly_stats import aux_weekly_stats
+from cli.mood_by_weather import aux_mood_by_weather
 
 """
 This is the main hub for user commands
@@ -35,6 +36,7 @@ def log(
 
     aux_log(mood, note, city, lat, lng)
     
+
 @app.command()
 def weekly_stats():
     '''
@@ -42,6 +44,13 @@ def weekly_stats():
     '''
     aux_weekly_stats()
 
+
+@app.command()
+def mood_by_weather():
+    '''
+    Retrieves average mood, average weather rating and average temperature on a weekly basis
+    '''
+    aux_mood_by_weather()
 
 #Start the cli
 if __name__ == "__main__":
