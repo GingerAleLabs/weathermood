@@ -1,5 +1,6 @@
 import typer
 
+from backend.services import ServiceUnavailableException
 from backend.services.MoodEntryService import MoodEntryService
 from backend.services.CityCoordsService import CityCoordsService
 from backend.services.WeatherService import WeatherService
@@ -39,11 +40,19 @@ def aux_log(mood, note, city, lat, lng):
 
     #Here I'm sure that I have latitude/longitude and they are both valid
 
-    weather = WeatherService.get_weather(latitude=latitude, longitude = longitude)
-    temperature = weather['temperature']
-    rating = weather['weather_rating']
-    description = weather['weather_description']
-    typer.echo(f"Current weather: {description}, {temperature} °C")
+    weather = None
+    try:
+        weather = WeatherService.get_weather(latitude=latitude, longitude = longitude)
+        temperature = weather['temperature']
+        rating = weather['weather_rating']
+        description = weather['weather_description']
+        typer.echo(f"Current weather: {description}, {temperature} °C")
+    except ServiceUnavailableException as e:
+        typer.echo("Could not retrieve weather data")
 
-    MoodEntryService.add_entry(user_id=None, mood=mood, note=note, temperature=temperature, weather_rating=rating)
-    typer.echo(f"Logged mood {mood} with note: '{note}'")
+    if weather is not None:
+        try:
+            MoodEntryService.add_entry(user_id=None, mood=mood, note=note, temperature=temperature, weather_rating=rating)
+            typer.echo(f"Logged mood {mood} with note: '{note}'")
+        except ServiceUnavailableException as e:
+            typer.echo("There has been an error logging your mood.")

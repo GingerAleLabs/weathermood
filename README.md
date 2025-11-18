@@ -16,7 +16,7 @@ Important:
 Commands must be given from the project root weathermood
 
 Loading mock db (erases all data):
-    python .\backend\mock.py 
+    python -m backend.mock 
 
 Running tests:
     pytest -v
@@ -25,3 +25,12 @@ CLI commands:
     python -m cli <command>
     python -m cli --help => shows supported commands
     python -m cli <command> --help => shows command info and params 
+
+╭─ Commands ──────────────────────────────────────────────────────────────────────────────╮
+│ list-entries      List all the entries                                                  │
+│ log               Log an entry providing the mood rating(1-5), an optional note, and a  │
+│                   city or coordinates                                                   │
+│ weekly-stats      Retrieves average mood, average weather rating and average            │
+│                   temperature on a weekly basis                                         │
+│ mood-by-weather   Retrieves average mood for each weather rating                        │
+╰─────────────────────────────────────────────────────────────────────────────────────────╯

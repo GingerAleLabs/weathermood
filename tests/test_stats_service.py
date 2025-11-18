@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import date, datetime, timedelta
-from backend.model.db import configure_db, init_db, get_connection
+from backend.model.db import configure_db, get_connection
 from backend.services.StatsService import StatsService
 
 def populate_db_for_stats_testing(conn):

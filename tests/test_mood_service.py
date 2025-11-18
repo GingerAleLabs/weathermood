@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-from backend.model.db import configure_db, init_db, get_connection
+from backend.model.db import configure_db, get_connection
 from backend.services.MoodEntryService import MoodEntryService
 
 def test_add_entry(tmp_path):

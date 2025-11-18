@@ -1,6 +1,8 @@
 from pathlib import Path
 import sqlite3
 
+from backend.model.DbException import DbException
+
 DEFAULT_DB_PATH = Path(__file__).parent / "weathermood.db"
 SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 
@@ -22,29 +24,42 @@ def get_connection():
     if DB_PATH is None:
         DB_PATH = DEFAULT_DB_PATH
 
-    if not DB_PATH.exists():
-        init_db()
+    try:
+        if not DB_PATH.exists():
+            _init_db()
 
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+
+        return conn
+    
+    except sqlite3.Error as e:
+        raise DbException ("Could not connect to the database") from e
+    
+    
 
 # Creates the db and initializes it using the SCHEMA_PATH script
-def init_db():
+def _init_db():
     global DB_PATH
     if DB_PATH is None:
         DB_PATH = DEFAULT_DB_PATH
 
-    db_file = Path(DB_PATH)
-    with sqlite3.connect(db_file) as conn:
-        with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-            conn.executescript(f.read())
+    try:
+        db_file = Path(DB_PATH)
+        with sqlite3.connect(db_file) as conn:
+            with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+                conn.executescript(f.read())
+    except (DbException, FileNotFoundError, PermissionError) as e:
+        raise DbException("Could not insert mock data into the database")
+
 
 def insert_mock_data():
-    conn = get_connection()
+    try:
+        with get_connection() as conn:
 
-    mock_path = Path(__file__).parent / "mockdata.sql"
+            mock_path = Path(__file__).parent / "mockdata.sql"
 
-    with sqlite3.connect(DB_PATH) as conn:
             with open(mock_path) as f:
                 conn.executescript(f.read())
+    except DbException, FileNotFoundError, PermissionError:
+        raise DbException("Could not insert mock data into the database")
