@@ -1,6 +1,6 @@
 import typer
 
-from backend.services import ServiceUnavailableException
+from backend.services.ServiceUnavailableException import ServiceUnavailableException
 from backend.services.MoodEntryService import MoodEntryService
 from backend.services.CityCoordsService import CityCoordsService
 from backend.services.WeatherService import WeatherService
@@ -8,6 +8,7 @@ from backend.services.WeatherService import WeatherService
 def aux_log(mood, note, city, lat, lng):
     '''
     validation rules:
+        - mood must be between 1 and 5 (handled by typer)
         - either city or both lat/lng must be provided
         - if provided, -90 <= lat <= 90 and -180 <= lon <= 180
     '''

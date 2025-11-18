@@ -3,7 +3,7 @@ from backend.model.db import get_connection
 from backend.domain.weather_scale import get_weather_description, WEATHER_SCALE
 from datetime import datetime
 
-from backend.services import ServiceUnavailableException
+from backend.services.ServiceUnavailableException import ServiceUnavailableException
     
 class StatsService:
 

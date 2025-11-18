@@ -1,6 +1,6 @@
 import typer
 
-from backend.services import ServiceUnavailableException
+from backend.services.ServiceUnavailableException import ServiceUnavailableException
 from backend.services.StatsService import StatsService
 
 from cli.utils import get_printable_rating

@@ -1,7 +1,7 @@
 import json
 import requests
 from backend.domain.weather_scale import get_weather_description, convert_openmeteo_rating
-from backend.services import ServiceUnavailableException
+from backend.services.ServiceUnavailableException import ServiceUnavailableException
 
 class WeatherService:
 
