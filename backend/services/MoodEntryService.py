@@ -7,10 +7,22 @@ from backend.services.ServiceUnavailableException import ServiceUnavailableExcep
 class MoodEntryService:
 
 
-    #Add an entry
-
+    # Add an entry
+    # mood : int (1-5)
+    # weather-rating : int (1-5)
     @staticmethod
     def add_entry(user_id:int | None, mood, note, temperature, weather_rating):
+        if temperature is None:
+            raise TypeError("Temperature cannot be None")
+        if mood is None:
+            raise TypeError("Mood cannot be None")
+        if weather_rating is None:
+            raise TypeError("Weather rating cannot be None")
+        if not (1 <= mood <= 5):
+            raise ValueError("Mood must be between 1 and 5")
+        if not (1 <= weather_rating <= 5):
+            raise ValueError("Weather rating must be between 1 and 5")
+        
         try:
             with get_connection() as conn:
                 cur = conn.cursor()

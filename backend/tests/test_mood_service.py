@@ -1,5 +1,7 @@
 import sqlite3
 from datetime import datetime
+
+import pytest
 from backend.model.db import configure_db, get_connection
 from backend.services.MoodEntryService import MoodEntryService
 
@@ -13,7 +15,7 @@ def test_add_entry(tmp_path):
         mood=4,
         note="Feeling good today",
         temperature=22.5,
-        weather_rating=3,
+        weather_rating=3
     )
 
     # Check the entry was correctly inserted
@@ -34,35 +36,62 @@ def test_add_entry(tmp_path):
     assert row["timestamp"] is not None
 
 
-def test_add_entry(tmp_path):
+def test_add_entry_invalid_params(tmp_path):
     # Using a dedicated test db
     test_db = tmp_path / "test.db"
     configure_db(str(test_db)) 
 
-    MoodEntryService.add_entry(
+    # temperature is None
+    with pytest.raises(TypeError):
+        MoodEntryService.add_entry(
         user_id=None,
-        mood=4,
+        mood=5,
+        note="Feeling good today",
+        temperature=None,
+        weather_rating=5
+    )
+        
+    # mood is None
+    with pytest.raises(TypeError):
+        MoodEntryService.add_entry(
+        user_id=None,
+        mood=None,
         note="Feeling good today",
         temperature=22.5,
-        weather_rating=3,
+        weather_rating=3
     )
 
-    # Check the entry was correctly inserted
-    conn = get_connection()
-    cur = conn.execute("SELECT * FROM mood_entry")
-    rows = cur.fetchall()
-    conn.close()
+    # mood out of range
+    with pytest.raises(ValueError):
+        MoodEntryService.add_entry(
+        user_id=None,
+        mood=7,
+        note="Feeling really good today",
+        temperature=22.5,
+        weather_rating=1
+    )
+        
+    # weather_rating is None
+    with pytest.raises(TypeError):
+        MoodEntryService.add_entry(
+        user_id=None,
+        mood=5,
+        note="Feeling good today",
+        temperature=22.5,
+        weather_rating=None
+    )
 
-    # Assertions
-    assert len(rows) == 1
-    row = rows[0]
+    # weather_rating out of range
+    with pytest.raises(ValueError):
+        MoodEntryService.add_entry(
+        user_id=None,
+        mood=5,
+        note="Feeling good today",
+        temperature=22.5,
+        weather_rating=7
+    )
 
-    assert row["mood"] == 4
-    assert row["note"] == "Feeling good today"
-    assert abs(row["temperature"] - 22.5) < 0.01
-    assert row["weather_rating"] == 3
-    assert row["user_id"] is None
-    assert row["timestamp"] is not None
+    
 
 
 
