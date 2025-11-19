@@ -26,11 +26,15 @@ CLI commands:
     python -m cli --help => shows supported commands
     python -m cli <command> --help => shows command info and params 
 
-╭─ Commands ──────────────────────────────────────────────────────────────────────────────╮
-│ list-entries      List all the entries                                                  │
-│ log               Log an entry providing the mood rating(1-5), an optional note, and a  │
-│                   city or coordinates                                                   │
-│ weekly-stats      Retrieves average mood, average weather rating and average            │
-│                   temperature on a weekly basis                                         │
-│ mood-by-weather   Retrieves average mood for each weather rating                        │
-╰─────────────────────────────────────────────────────────────────────────────────────────╯
+
+Command list:
+
+list-entries        List all the entries
+
+log                 Log an entry providing the mood rating (1-5), an optional note, 
+                    and a city or coordinates
+
+weekly-stats        Retrieves average mood, average weather rating and average 
+                    temperature on a weekly basis
+
+mood-by-weather     Retrieves average mood for each weather rating
