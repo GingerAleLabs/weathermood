@@ -21,7 +21,7 @@ def aux_log(mood, note, city, lat, lng):
         else:
             #determine lat/lng from the city
             normalized_city = city.strip().lower().replace(" ", "_")
-            cityCoords = CityCoordsService.getSupportedCitiesCoords()
+            cityCoords = CityCoordsService.get_supported_cities_coords()
             if(not normalized_city in cityCoords.keys()):
                 raise typer.BadParameter(f"The city of {city} is not supported, please use its coordinates instead")
             else:

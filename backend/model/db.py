@@ -50,7 +50,7 @@ def _init_db():
             with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
                 conn.executescript(f.read())
     except (DbException, FileNotFoundError, PermissionError) as e:
-        raise DbException("Could not insert mock data into the database")
+        raise DbException("Could not initialize the database")
 
 
 def insert_mock_data():

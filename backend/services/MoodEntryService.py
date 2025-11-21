@@ -1,11 +1,11 @@
 from backend.model.DbException import DbException
-from backend.model.db import get_connection
-from datetime import datetime
+from backend.model.db_queries import add_entry as db_queries_add_entry
+from backend.model.db_queries import get_entries as db_queries_get_entries
+
 from backend.domain.weather_scale import get_weather_description
 from backend.services.ServiceUnavailableException import ServiceUnavailableException
 
 class MoodEntryService:
-
 
     # Add an entry
     # mood : int (1-5)
@@ -24,49 +24,22 @@ class MoodEntryService:
             raise ValueError("Weather rating must be between 1 and 5")
         
         try:
-            with get_connection() as conn:
-                cur = conn.cursor()
-                timestamp = datetime.now().isoformat()
-                cur.execute(
-                    """
-                    INSERT INTO mood_entry (user_id, timestamp, mood, note, temperature, weather_rating)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                    """,
-                    (user_id, timestamp, mood, note, temperature, weather_rating)
-                )
-                conn.commit()
+            db_queries_add_entry(user_id, mood, note, temperature, weather_rating)
         except DbException as e:
             raise ServiceUnavailableException("Could not add mood entry") from e
 
 
     #Retrieve all entries
-
     @staticmethod
     def get_entries():
         try:
-            with get_connection() as conn:
-                cur = conn.cursor()
-                cur.execute(
-                    """
-                    SELECT timestamp, mood, note, temperature, weather_rating 
-                    FROM mood_entry 
-                    ORDER BY timestamp DESC
-                    """
-                )
-                rows = cur.fetchall()
-
-                entries = [
-                    {
-                        'timestamp':row['timestamp'], 
-                        'mood':row['mood'], 
-                        'note':row['note'], 
-                        'temperature':row['temperature'], 
-                        'weather_rating':row['weather_rating'], 
-                        'weather_description':get_weather_description(row['weather_rating']),
-                    } 
-                    for row in rows
-                ]
-
-                return entries
-        except (DbException, KeyError) as e:
+            entries = db_queries_get_entries()
+            return [
+                {
+                    **entry, 
+                    "weather_description": get_weather_description(entry["weather_rating"])
+                }
+                for entry in entries
+            ]
+        except (DbException) as e:
             raise ServiceUnavailableException("Could not retrieve the entries") from e
