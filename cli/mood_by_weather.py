@@ -15,7 +15,7 @@ def aux_mood_by_weather():
                 typer.echo(f"{s['weather_description']}: No data")
             else:
                 mood = get_printable_rating(round(s['avg_mood']))
-                typer.echo(f"{s['weather_description']}: {mood} ({s['num_entries']} entries)")
+                typer.echo(f"{s['weather_description']}: {mood} ({s['num_entries']} {"entries" if s['num_entries'] != 1 else "entry"})")
             
             typer.echo('------------------------------------------------')
     except ServiceUnavailableException, KeyError, IndexError:
