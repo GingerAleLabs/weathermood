@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import sqlite3
 
@@ -9,19 +10,20 @@ SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 DB_PATH: Path | None = None
 
 
-# if called before get_connection(), allows to change the path of the DB
-# Useful to run tests with a separate db file 
-def configure_db(path):
-    global DB_PATH
-    DB_PATH = Path(path)
-
 # Returns a connection to the db
 # If the db file does not exist yet,
 # this function creates and initializes it
 def get_connection():
 
+    # When testing, I set the env variable WM_DB_PATH to 
+    # a temp db path dedicated to that single test
+    # if env_path == True, then I'm testing and I should use that db
+    # Otherwise, I'll just use the default db
     global DB_PATH
-    if DB_PATH is None:
+    env_path = os.environ.get("WM_DB_PATH")
+    if env_path:
+        DB_PATH = Path(env_path)
+    else:
         DB_PATH = DEFAULT_DB_PATH
 
     try:
@@ -61,5 +63,5 @@ def insert_mock_data():
 
             with open(mock_path) as f:
                 conn.executescript(f.read())
-    except DbException, FileNotFoundError, PermissionError:
+    except (DbException, FileNotFoundError, PermissionError):
         raise DbException("Could not insert mock data into the database")

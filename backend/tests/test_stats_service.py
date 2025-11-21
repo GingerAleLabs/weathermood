@@ -1,7 +1,8 @@
 import sqlite3
 from datetime import date, datetime, timedelta
-from backend.model.db import configure_db, get_connection
+from backend.model.db import get_connection
 from backend.services.StatsService import StatsService
+
 
 def populate_db_for_stats_testing(conn):
 
@@ -43,10 +44,9 @@ def populate_db_for_stats_testing(conn):
     conn.commit()
     
 
-def test_weekly_stats(tmp_path):
+def test_weekly_stats(tmp_path, monkeypatch):
     # Using a dedicated test db
-    test_db = tmp_path / "test.db"
-    configure_db(str(test_db)) 
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
 
     # Insert test entries
     conn = get_connection()
@@ -89,10 +89,9 @@ def test_weekly_stats(tmp_path):
     assert stats3["num_entries"] == 1
 
 
-def test_mood_per_weather_ranking(tmp_path):
+def test_mood_per_weather_ranking(tmp_path, monkeypatch):
     # Using a dedicated test db
-    test_db = tmp_path / "test.db"
-    configure_db(str(test_db)) 
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
 
     # Insert test entries
     conn = get_connection()

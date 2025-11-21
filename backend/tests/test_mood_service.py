@@ -2,13 +2,13 @@ import sqlite3
 from datetime import datetime
 
 import pytest
-from backend.model.db import configure_db, get_connection
+from backend.model.db import get_connection
 from backend.services.MoodEntryService import MoodEntryService
 
-def test_add_entry(tmp_path):
+
+def test_add_entry(tmp_path, monkeypatch):
     # Using a dedicated test db
-    test_db = tmp_path / "test.db"
-    configure_db(str(test_db)) 
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
 
     MoodEntryService.add_entry(
         user_id=None,
@@ -36,10 +36,9 @@ def test_add_entry(tmp_path):
     assert row["timestamp"] is not None
 
 
-def test_add_entry_invalid_params(tmp_path):
+def test_add_entry_invalid_params(tmp_path, monkeypatch):
     # Using a dedicated test db
-    test_db = tmp_path / "test.db"
-    configure_db(str(test_db)) 
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
 
     # temperature is None
     with pytest.raises(TypeError):
@@ -95,10 +94,9 @@ def test_add_entry_invalid_params(tmp_path):
 
 
 
-def test_get_entries(tmp_path):
+def test_get_entries(tmp_path, monkeypatch):
     # Using a dedicated test db
-    test_db = tmp_path / "test.db"
-    configure_db(str(test_db)) 
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
 
     # Insert 3 entries
     conn = get_connection()
