@@ -6,9 +6,9 @@ import typer
 
 
 
-def aux_list_entries():
+def aux_list_entries(year, month):
     try:
-        entries = MoodEntryService.get_entries()
+        entries = MoodEntryService.get_entries(year, month)
 
         if not entries:
             typer.echo("No entries found.")

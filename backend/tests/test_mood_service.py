@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime
+from datetime import datetime, date
 
 import pytest
 from backend.model.db import get_connection
@@ -149,3 +149,133 @@ def test_get_entries(tmp_path, monkeypatch):
     assert abs(entry1["temperature"] - 22.3) < 0.01
     assert entry1["weather_rating"] == 4
     assert entry1["timestamp"] == timestamp3
+
+
+def test_get_entries_month(tmp_path, monkeypatch):
+    # Using a dedicated test db
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
+
+    # Insert 3 entries
+    conn = get_connection()
+    cur = conn.cursor()
+
+    m1 = date.fromisoformat("2025-11-03") # year 2025, month 11 
+    m2 = date.fromisoformat("2025-10-11") # year 2025, month 10
+
+    rows = [
+        (None, m1.isoformat(), 3, "Just okay", 16.1, 2),
+        (None, m1.isoformat(), 1, "Less than ideal", 5.7, 0),
+        (None, m2.isoformat(), 5, "Feelin' great :)", 22.3, 4),
+    ]
+
+    cur.executemany(
+        """
+        INSERT INTO mood_entry (user_id, timestamp, mood, note, temperature, weather_rating)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        rows
+    )
+
+    conn.commit()
+    conn.close()
+
+    entries = MoodEntryService.get_entries(2025, 11)
+
+    # Assertions
+    assert len(entries) == 2
+    
+    entries = MoodEntryService.get_entries(2025, 10)
+
+    # Assertions
+    assert len(entries) == 1
+
+    with pytest.raises(ValueError):
+        entries = MoodEntryService.get_entries(2025, 19)
+
+def test_get_entries_year(tmp_path, monkeypatch):
+    # Using a dedicated test db
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
+
+    # Insert 3 entries
+    conn = get_connection()
+    cur = conn.cursor()
+
+    m1 = date.fromisoformat("2025-11-03") # year 2025, month 11 
+    m2 = date.fromisoformat("2024-10-11") # year 2024, month 10
+
+    rows = [
+        (None, m1.isoformat(), 3, "Just okay", 16.1, 2),
+        (None, m1.isoformat(), 1, "Less than ideal", 5.7, 0),
+        (None, m2.isoformat(), 5, "Feelin' great :)", 22.3, 4),
+    ]
+
+    cur.executemany(
+        """
+        INSERT INTO mood_entry (user_id, timestamp, mood, note, temperature, weather_rating)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        rows
+    )
+
+    conn.commit()
+    conn.close()
+
+    entries = MoodEntryService.get_entries(2025)
+
+    # Assertions
+    assert len(entries) == 2
+    
+    entries = MoodEntryService.get_entries(2024)
+
+    # Assertions
+    assert len(entries) == 1
+
+def test_get_entries_year_and_month(tmp_path, monkeypatch):
+    # Using a dedicated test db
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
+
+    # Insert 3 entries
+    conn = get_connection()
+    cur = conn.cursor()
+
+    m1 = date.fromisoformat("2025-11-03") # year 2025, month 11 
+    m2 = date.fromisoformat("2025-10-09") # year 2025, month 10
+    m3 = date.fromisoformat("2024-10-09") # year 2024, month 10
+
+    rows = [
+        (None, m1.isoformat(), 3, "Just okay", 16.1, 2),
+        (None, m1.isoformat(), 1, "Less than ideal", 5.7, 0),
+        (None, m2.isoformat(), 5, "Feelin' great :)", 22.3, 4),
+        (None, m3.isoformat(), 4, "Not too shabby", 15.4, 2)
+    ]
+
+    cur.executemany(
+        """
+        INSERT INTO mood_entry (user_id, timestamp, mood, note, temperature, weather_rating)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        rows
+    )
+
+    conn.commit()
+    conn.close()
+
+    entries = MoodEntryService.get_entries(2025, 11)
+
+    # Assertions
+    assert len(entries) == 2
+    
+    entries = MoodEntryService.get_entries(2025, 10)
+
+    # Assertions
+    assert len(entries) == 1
+
+    entries = MoodEntryService.get_entries(2024, 10)
+
+    # Assertions
+    assert len(entries) == 1
+
+    entries = MoodEntryService.get_entries(2024, 7)
+
+    # Assertions
+    assert len(entries) == 0

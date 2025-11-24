@@ -15,11 +15,14 @@ app = typer.Typer(help="Mood & Weather Tracker CLI")
 
 
 @app.command()
-def list_entries():
+def list_entries(
+        year:  int = typer.Option(None, "-year", help="Filter by year"),
+        month: int = typer.Option(None, "-month", help="Filter by month (1 - 12)"),
+    ):
     '''
     List all the entries
     '''
-    aux_list_entries()
+    aux_list_entries(year, month)
 
 
 @app.command()

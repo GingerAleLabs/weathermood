@@ -29,7 +29,7 @@ CLI commands:
 
 Command list:
 
-list-entries        List all the entries
+list-entries        List all the entries, optionally filtering by year and month
 
 log                 Log an entry providing the mood rating (1-5), an optional note, 
                     and a city or coordinates

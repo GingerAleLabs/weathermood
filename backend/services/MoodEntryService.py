@@ -29,11 +29,14 @@ class MoodEntryService:
             raise ServiceUnavailableException("Could not add mood entry") from e
 
 
-    #Retrieve all entries
+    #Retrieve all entries, optionally filtering by year/month
     @staticmethod
-    def get_entries():
+    def get_entries(year:int =None, month:int =None):
+        if not (month is None or (1 <= month <= 12)):
+            raise ValueError("Month must be between 1 and 12")
+
         try:
-            entries = db_queries_get_entries()
+            entries = db_queries_get_entries(year, month)
             return [
                 {
                     **entry, 

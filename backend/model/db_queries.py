@@ -21,33 +21,34 @@ def add_entry(user_id, mood, note, temperature, weather_rating):
         raise DbException
     
 
-def get_entries():
+def get_entries(year=None, month=None):
     try:
         with get_connection() as conn:
             cur = conn.cursor()
-            cur.execute(
-                """
+            query = """
                 SELECT timestamp, mood, note, temperature, weather_rating 
                 FROM mood_entry 
-                ORDER BY timestamp DESC
                 """
-            )
-            rows = cur.fetchall()
 
-            '''
-            entries = [
-                {
-                    'timestamp':row['timestamp'], 
-                    'mood':row['mood'], 
-                    'note':row['note'], 
-                    'temperature':row['temperature'], 
-                    'weather_rating':row['weather_rating']
-                } 
-                for row in rows
-            ]
-            '''
+            filters = []
+            params = []
 
-            return rows
+            if year is not None:
+                filters.append("strftime('%Y', timestamp) = ?")
+                params.append(str(year))
+
+            if month is not None:
+                filters.append("strftime('%m', timestamp) = ?")
+                params.append(str(month))
+
+            if filters:
+                query += " WHERE " + " AND ".join(filters)
+
+            query += " ORDER BY timestamp DESC"
+
+            cur.execute(query, params)
+            return cur.fetchall()
+        
     except Exception:
         raise DbException
     
