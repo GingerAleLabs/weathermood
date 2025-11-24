@@ -179,12 +179,12 @@ def test_get_entries_month(tmp_path, monkeypatch):
     conn.commit()
     conn.close()
 
-    entries = MoodEntryService.get_entries(2025, 11)
+    entries = MoodEntryService.get_entries(None, 11)
 
     # Assertions
     assert len(entries) == 2
     
-    entries = MoodEntryService.get_entries(2025, 10)
+    entries = MoodEntryService.get_entries(None, 10)
 
     # Assertions
     assert len(entries) == 1

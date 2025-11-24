@@ -6,10 +6,15 @@ from backend.services.StatsService import StatsService
 from cli.utils import get_printable_rating
 from datetime import date
 
-def aux_weekly_stats():
+def aux_weekly_stats(year, month):
     try:
-        typer.echo("weekly stats:")
-        stats = StatsService.get_weekly_stats()
+        stats = StatsService.get_weekly_stats(year, month)
+
+        if len(stats) == 0:
+            typer.echo("Can't compute the stats, no entries found")
+            return
+
+        typer.echo("Weekly stats:")
 
         for s in stats:
             year = int(s['year'])

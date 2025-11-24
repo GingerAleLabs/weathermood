@@ -17,10 +17,10 @@ app = typer.Typer(help="Mood & Weather Tracker CLI")
 @app.command()
 def list_entries(
         year:  int = typer.Option(None, "-year", help="Filter by year"),
-        month: int = typer.Option(None, "-month", help="Filter by month (1 - 12)"),
+        month: int = typer.Option(None, "-month", help="Filter by month (1 - 12)")
     ):
     '''
-    List all the entries
+    List all the entries, optionally filtering by year and month
     '''
     aux_list_entries(year, month)
 
@@ -41,11 +41,15 @@ def log(
     
 
 @app.command()
-def weekly_stats():
+def weekly_stats(
+        year:  int = typer.Option(None, "-year", help="Filter by year"),
+        month: int = typer.Option(None, "-month", help="Filter by month (1 - 12)")
+    ):
     '''
-    Retrieves average mood, average weather rating and average temperature on a weekly basis
+    Retrieves average mood, average weather rating and average temperature on a weekly basis,
+    optionally filtering by year and month
     '''
-    aux_weekly_stats()
+    aux_weekly_stats(year, month)
 
 
 @app.command()

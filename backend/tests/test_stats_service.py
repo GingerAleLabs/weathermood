@@ -1,4 +1,5 @@
 import sqlite3
+import pytest
 from datetime import date, datetime, timedelta
 from backend.model.db import get_connection
 from backend.services.StatsService import StatsService
@@ -88,6 +89,53 @@ def test_weekly_stats(tmp_path, monkeypatch):
     assert abs(stats3["avg_weather_rating"] - 2) < 0.01
     assert stats3["num_entries"] == 1
 
+def test_weekly_stats_year(tmp_path, monkeypatch):
+    # Using a dedicated test db
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
+
+    # Insert test entries
+    conn = get_connection()
+    populate_db_for_stats_testing(conn)
+    conn.close()
+
+    stats = StatsService.get_weekly_stats(2025)
+    assert len(stats) == 1
+
+    stats = StatsService.get_weekly_stats(2026)
+    assert len(stats) == 0
+
+def test_weekly_stats_month(tmp_path, monkeypatch):
+    # Using a dedicated test db
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
+
+    # Insert test entries
+    conn = get_connection()
+    populate_db_for_stats_testing(conn)
+    conn.close()
+
+    stats = StatsService.get_weekly_stats(None, 11)
+    assert len(stats) == 1
+
+    stats = StatsService.get_weekly_stats(None, 7)
+    assert len(stats) == 0
+
+    with pytest.raises(ValueError):
+        stats = StatsService.get_weekly_stats(None, 17)
+
+def test_weekly_stats_year_and_month(tmp_path, monkeypatch):
+    # Using a dedicated test db
+    monkeypatch.setenv("WM_DB_PATH", str(tmp_path/"test.db"))
+
+    # Insert test entries
+    conn = get_connection()
+    populate_db_for_stats_testing(conn)
+    conn.close()
+
+    stats = StatsService.get_weekly_stats(2025, 11)
+    assert len(stats) == 1
+
+    stats = StatsService.get_weekly_stats(2024, 11)
+    assert len(stats) == 0
 
 def test_mood_per_weather_ranking(tmp_path, monkeypatch):
     # Using a dedicated test db

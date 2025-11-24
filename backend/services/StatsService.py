@@ -13,9 +13,12 @@ class StatsService:
     #Compute weekly stats: average mood, average temperature, average weather
 
     @staticmethod
-    def get_weekly_stats():
+    def get_weekly_stats(year:int =None, month:int =None):
+        if not (month is None or (1 <= month <= 12)):
+            raise ValueError("Month must be between 1 and 12")
+        
         try:
-            stats = db_queries_get_weekly_stats()
+            stats = db_queries_get_weekly_stats(year, month)
 
             return [
                 {

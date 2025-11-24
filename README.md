@@ -35,6 +35,6 @@ log                 Log an entry providing the mood rating (1-5), an optional no
                     and a city or coordinates
 
 weekly-stats        Retrieves average mood, average weather rating and average 
-                    temperature on a weekly basis
+                    temperature on a weekly basis, optionally filtering by year and month
 
 mood-by-weather     Retrieves average mood for each weather rating

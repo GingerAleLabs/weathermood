@@ -53,36 +53,37 @@ def get_entries(year=None, month=None):
         raise DbException
     
 
-def get_weekly_stats():
+def get_weekly_stats(year, month):
     try:
         with get_connection() as conn:
             cur = conn.cursor()
-            cur.execute(
-                """
+            query = """
                 SELECT timestamp, AVG(mood) AS avg_mood, AVG(temperature) AS avg_temperature, AVG(weather_rating) AS avg_weather_rating, COUNT(*) as num_entries 
                 FROM mood_entry 
+            """
+
+            filters = []
+            params = []
+
+            if year is not None:
+                filters.append("strftime('%Y', timestamp) = ?")
+                params.append(str(year))
+
+            if month is not None:
+                filters.append("strftime('%m', timestamp) = ?")
+                params.append(str(month))
+
+            if filters:
+                query += " WHERE " + " AND ".join(filters)
+
+            query += """
                 GROUP BY strftime('%Y', timestamp), strftime('%W', timestamp)
                 ORDER BY timestamp DESC
-                """
-            )
-            rows = cur.fetchall()
+            """
 
-            '''
-            stats = [
-                {
-                    'year': datetime.fromisoformat(row['timestamp']).isocalendar().year,
-                    'week_number': datetime.fromisoformat(row['timestamp']).isocalendar().week,
-                    
-                    'avg_mood': row['avg_mood'], 
-                    'avg_temperature': row['avg_temperature'], 
-                    'avg_weather_rating': row['avg_weather_rating'],
-                    'num_entries': row['num_entries']
-                }
-                for row in rows
-            ]
-            '''
-
-            return rows
+            cur.execute(query, params)
+            return cur.fetchall()
+        
     except Exception:
         raise DbException
     
