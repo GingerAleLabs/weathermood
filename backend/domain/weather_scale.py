@@ -10,22 +10,24 @@ WEATHER_SCALE = {
 
 #conversion from Open-Meteo weather codes to WEATHER_SCALE
 #
-# Code | Description                          | Rating (0–9)
+# Code | Description                          | Rating (1–5)
 # -----------------------------------------------------------
-# 0     | Clear sky                            | 5
-# 1–2   | Mainly clear, partly cloudy          | 4-3
-# 3     | Overcast                             | 2
-# 45–48 | Fog, depositing rime fog             | 2
-# 51–55 | Drizzle (light → dense)              | 1
-# 56–57 | Freezing drizzle                     | 1
-# 61–65 | Rain (light → heavy)                 | 1-1-1-0-0
-# 66–67 | Freezing rain                        | 1-0
-# 71–75 | Snowfall (light → heavy)             | 1-1-1-0-0
-# 77    | Snow grains                          | 0
-# 80–82 | Rain showers (light → violent)       | 1-1-0
-# 85–86 | Snow showers                         | 1-0
-# 95    | Thunderstorm                         | 0
-# 96–99 | Thunderstorm with hail               | 0
+# 0–1   | Clear sky / Mainly clear             | 5
+# 2     | Partly cloudy                        | 4
+# 3     | Overcast                             | 3
+# 45–48 | Fog, depositing rime fog             | 3
+# 51–57 | Drizzle / Freezing drizzle           | 2
+# 61–63 | Rain (light → moderate)              | 2
+# 64–65 | Rain (heavy)                         | 1
+# 66–67 | Freezing rain                        | 1
+# 71–73 | Snowfall (light → moderate)          | 2
+# 74–75 | Snowfall (heavy)                     | 1
+# 80–81 | Rain showers (light → moderate)      | 2
+# 82    | Rain showers (violent)               | 1
+# 85    | Snow showers (light)                 | 2
+# 86    | Snow showers (heavy)                 | 1
+# 95    | Thunderstorm                         | 1
+# 96–99 | Thunderstorm with hail               | 1
 
 rated1 = [64, 65, 67, 74, 75, 82, 86, 95, 96, 97, 98, 99]
 rated2 = [51, 52, 53, 54, 55, 56, 57, 61, 62, 63, 66, 71, 72, 73, 80, 81, 85]
